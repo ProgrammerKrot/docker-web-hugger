@@ -1,0 +1,14 @@
+node_modules
+.next
+out
+build
+.idea
+.vscode
+*.log
+.env
+.env.local
+backend/__pycache__
+backend/.venv
+backend/venv
+backend/env
+public/
