@@ -38,12 +38,19 @@ async def list_containers():
             if isinstance(state_val, dict):
                 state_val = state_val.get("Status", "unknown")
                 
+            labels = attrs.get("Config", {}).get("Labels", {})
+            project = labels.get("com.docker.compose.project", "")
+            service = labels.get("com.docker.compose.service", "")
+
             transformed.append({
                 "Id": c.id,
                 "Names": attrs.get("Names", [attrs.get("Name", c.id[:12])]),
                 "Image": attrs.get("Config", {}).get("Image", attrs.get("Image", "unknown")),
                 "State": state_val,
                 "Status": attrs.get("Status", state_val),
+                "Labels": labels,
+                "ComposeProject": project,
+                "ComposeService": service
             })
         return transformed
     except Exception as e:

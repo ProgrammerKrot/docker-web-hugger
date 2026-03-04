@@ -3,7 +3,8 @@
 import { useEffect, useState } from 'react';
 import SpaceCard from '@/components/SpaceCard';
 import LogViewer from '@/components/LogViewer';
-import { LayoutGrid, ScrollText, RefreshCw } from 'lucide-react';
+import ProjectGroup from '@/components/ProjectGroup';
+import { LayoutGrid, ScrollText, RefreshCw, Box } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 export default function Dashboard() {
@@ -12,6 +13,16 @@ export default function Dashboard() {
     const [selectedContainerId, setSelectedContainerId] = useState<string | null>(null);
     const [loading, setLoading] = useState(true);
     const [refreshing, setRefreshing] = useState(false);
+
+    // Group containers by project
+    const groupedContainers = containers.reduce((acc: any, container) => {
+        const project = container.ComposeProject || "";
+        if (!acc[project]) {
+            acc[project] = [];
+        }
+        acc[project].push(container);
+        return acc;
+    }, {});
 
     const fetchContainers = async () => {
         try {
@@ -24,7 +35,6 @@ export default function Dashboard() {
             console.error('Failed to fetch containers:', err);
         }
     };
-
     const fetchImages = async () => {
         try {
             const res = await fetch('http://localhost:8000/images');
@@ -69,7 +79,7 @@ export default function Dashboard() {
     };
 
     return (
-        <div className="max-w-7xl mx-auto space-y-12 pb-24">
+        <div className="max-w-7xl mx-auto space-y-12 pb-24 px-4 sm:px-6 lg:px-8">
             {/* Header */}
             <header className="flex flex-col md:flex-row md:items-end justify-between gap-6 pt-4">
                 <div>
@@ -86,7 +96,7 @@ export default function Dashboard() {
                     <motion.h1
                         initial={{ opacity: 0, y: 10 }}
                         animate={{ opacity: 1, y: 0 }}
-                        className="text-4xl md:text-5xl font-black tracking-tight"
+                        className="text-4xl md:text-5xl font-black tracking-tight text-white"
                     >
                         Docker <span className="bg-gradient-to-r from-blue-400 to-indigo-500 bg-clip-text text-transparent">Spaces</span>
                     </motion.h1>
@@ -99,7 +109,7 @@ export default function Dashboard() {
                             <span>{containers.filter(c => c && c.State === 'running').length} Active</span>
                         </div>
                         <div className="flex items-center gap-2 border-l border-white/10 pl-6">
-                            <span className="w-2 h-2 rounded-full bg-foreground/20"></span>
+                            <span className="w-2 h-2 rounded-full bg-white/20"></span>
                             <span>{containers.length} Total</span>
                         </div>
                     </div>
@@ -107,10 +117,10 @@ export default function Dashboard() {
             </header>
 
             {/* Grid View */}
-            <section className="space-y-6">
+            <section className="space-y-8">
                 <div className="flex items-center gap-2 pb-2 border-b border-white/5">
-                    <LayoutGrid size={20} className="text-foreground/40" />
-                    <h2 className="text-xl font-bold">Your Spaces</h2>
+                    <Box size={20} className="text-foreground/40" />
+                    <h2 className="text-xl font-bold uppercase tracking-tight text-white/70">Orchestration & Spaces</h2>
                 </div>
 
                 {loading ? (
@@ -120,18 +130,22 @@ export default function Dashboard() {
                         ))}
                     </div>
                 ) : (
-                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-                        <AnimatePresence mode="popLayout">
-                            {containers.map((container) => (
-                                <SpaceCard
-                                    key={container.Id}
-                                    container={container}
-                                    onAction={handleAction}
-                                    onViewLogs={(id) => setSelectedContainerId(id)}
-                                    isSelected={selectedContainerId === container.Id}
-                                />
-                            ))}
-                        </AnimatePresence>
+                    <div className="space-y-2">
+                        {Object.entries(groupedContainers).map(([projectName, projectContainers]: [string, any]) => (
+                            <ProjectGroup key={projectName} projectName={projectName}>
+                                <AnimatePresence mode="popLayout">
+                                    {projectContainers.map((container: any) => (
+                                        <SpaceCard
+                                            key={container.Id}
+                                            container={container}
+                                            onAction={handleAction}
+                                            onViewLogs={(id) => setSelectedContainerId(id)}
+                                            isSelected={selectedContainerId === container.Id}
+                                        />
+                                    ))}
+                                </AnimatePresence>
+                            </ProjectGroup>
+                        ))}
                     </div>
                 )}
             </section>
