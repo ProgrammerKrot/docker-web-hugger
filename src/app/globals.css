@@ -3,15 +3,19 @@
 @tailwind utilities;
 
 :root {
-  --background: #0b0e14;
-  --foreground: #f0f2f5;
-  --card-bg: rgba(23, 27, 34, 0.7);
-  --card-border: rgba(255, 255, 255, 0.1);
-  --accent: #3b82f6;
-  --accent-glow: rgba(59, 130, 246, 0.3);
+  --background: #ffffff;
+  --foreground: #111827;
+  --card-bg: #ffffff;
+  --card-border: #e5e7eb;
+  --accent: #4f46e5;
+  --accent-soft: #eef2ff;
   --success: #10b981;
+  --success-soft: #ecfdf5;
   --error: #ef4444;
+  --error-soft: #fef2f2;
   --warning: #f59e0b;
+  --warning-soft: #fffbeb;
+  --sidebar-bg: #f9fafb;
 }
 
 body {
@@ -19,27 +23,26 @@ body {
   color: var(--foreground);
   font-family: 'Inter', system-ui, -apple-system, sans-serif;
   overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
 }
 
-/* Glassmorphism */
-.glass {
+/* Hugging Face Style Cards */
+.hf-card {
   background: var(--card-bg);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
   border: 1px solid var(--card-border);
-  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  border-radius: 0.75rem;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.glass-hover:hover {
-  border-color: rgba(255, 255, 255, 0.2);
-  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.5);
-  transform: translateY(-2px);
-  transition: all 0.3s ease;
+.hf-card:hover {
+  border-color: #d1d5db;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
 }
 
-/* Custom Scrollbar */
+/* Custom Scrollbar (Light) */
 ::-webkit-scrollbar {
-  width: 8px;
+  width: 6px;
 }
 
 ::-webkit-scrollbar-track {
@@ -47,16 +50,16 @@ body {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.1);
-  border-radius: 4px;
+  background: #d1d5db;
+  border-radius: 10px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(255, 255, 255, 0.2);
+  background: #9ca3af;
 }
 
 @layer utilities {
-  .text-glow {
-    text-shadow: 0 0 10px var(--accent-glow);
+  .bg-hf-gradient {
+    background: linear-gradient(135deg, #f3f4f6 0%, #ffffff 100%);
   }
 }

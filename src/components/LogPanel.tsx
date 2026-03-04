@@ -66,17 +66,17 @@ export default function LogPanel({ containerId, containerName }: LogPanelProps) 
     }, [logs]);
 
     return (
-        <div className="glass bg-black/40 rounded-xl flex flex-col h-[300px] border border-white/5 overflow-hidden">
-            <div className="px-3 py-2 border-b border-white/5 flex items-center justify-between bg-black/20">
+        <div className="hf-card bg-gray-50 flex flex-col h-[300px] overflow-hidden border-gray-200">
+            <div className="px-4 py-2 border-b border-gray-200 flex items-center justify-between bg-white">
                 <div className="flex items-center gap-2">
-                    <Terminal size={12} className="text-blue-400" />
-                    <span className="text-[10px] font-bold uppercase tracking-wider text-white/60">
-                        {containerName} Logs
+                    <Terminal size={14} className="text-indigo-500" />
+                    <span className="text-[10px] font-black uppercase tracking-widest text-gray-500">
+                        {containerName} • Runtime Logs
                     </span>
                 </div>
                 <button
                     onClick={() => setLogs([])}
-                    className="p-1 rounded hover:bg-white/5 text-white/30 hover:text-white/60 transition-colors"
+                    className="p-1 rounded hover:bg-gray-100 text-gray-400 hover:text-gray-600 transition-colors"
                 >
                     <Trash2 size={12} />
                 </button>
@@ -84,17 +84,18 @@ export default function LogPanel({ containerId, containerName }: LogPanelProps) 
 
             <div
                 ref={scrollRef}
-                className="flex-1 overflow-y-auto p-3 font-mono text-[10px] leading-relaxed space-y-1 custom-scrollbar"
+                className="flex-1 overflow-y-auto p-4 font-mono text-[11px] leading-relaxed space-y-1.5 custom-scrollbar bg-white/50"
             >
                 {logs.length === 0 ? (
-                    <div className="h-full flex items-center justify-center text-white/10 italic">
-                        No logs yet...
+                    <div className="h-full flex flex-col items-center justify-center text-gray-300 gap-2 italic">
+                        <div className="w-1.5 h-1.5 rounded-full bg-gray-200 animate-pulse" />
+                        Waiting for logs...
                     </div>
                 ) : (
                     logs.map(log => (
-                        <div key={log.id} className="flex gap-2 group">
-                            <span className="text-white/20 shrink-0">{log.timestamp}</span>
-                            <span className="text-white/80 break-all">{log.content}</span>
+                        <div key={log.id} className="flex gap-3 group">
+                            <span className="text-gray-300 shrink-0 font-bold select-none">{log.timestamp}</span>
+                            <span className="text-gray-700 break-all">{log.content}</span>
                         </div>
                     ))
                 )}

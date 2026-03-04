@@ -27,7 +27,6 @@ interface SpaceCardProps {
 export default function SpaceCard({ container, onAction, onViewLogs, isSelected }: SpaceCardProps) {
     if (!container) return null;
 
-    // Extreme safety check for Names
     let name = "unknown";
     try {
         if (container.Names && Array.isArray(container.Names) && container.Names.length > 0) {
@@ -45,56 +44,71 @@ export default function SpaceCard({ container, onAction, onViewLogs, isSelected 
 
     return (
         <motion.div
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             className={cn(
-                "glass glass-hover p-6 rounded-2xl flex flex-col gap-4 cursor-pointer transition-all duration-300",
-                isSelected && "border-blue-500/50 shadow-[0_0_20px_rgba(59,130,246,0.2)]"
+                "hf-card flex flex-col overflow-hidden bg-white group",
+                isSelected && "ring-2 ring-indigo-500 ring-offset-2"
             )}
-            onClick={() => onViewLogs(container.Id)}
         >
-            <div className="flex justify-between items-start">
-                <div className="flex items-center gap-3">
-                    <div className={cn(
-                        "p-2 rounded-lg bg-blue-500/10 text-blue-400",
-                        isActive && "bg-green-500/10 text-green-400"
-                    )}>
-                        <Activity size={20} />
-                    </div>
-                    <div>
-                        <h3 className="font-bold text-lg truncate max-w-[150px]">{name}</h3>
-                        <p className="text-xs text-foreground/50 truncate max-w-[150px]">{container.Image}</p>
-                    </div>
+            {/* Status Bar */}
+            <div className={cn(
+                "px-4 py-2 flex items-center justify-between text-[10px] font-black uppercase tracking-widest",
+                isActive ? "bg-gradient-to-r from-blue-600 to-blue-500 text-white" : "bg-gray-100 text-gray-400"
+            )}>
+                <div className="flex items-center gap-2">
+                    {isActive ? (
+                        <Activity size={12} className="animate-pulse" />
+                    ) : (
+                        <Square size={12} />
+                    )}
+                    <span>{isActive ? 'Running' : 'Stopped'}</span>
                 </div>
-                <div className={cn(
-                    "px-2 py-1 rounded-full text-[10px] uppercase font-bold tracking-wider",
-                    isActive ? "bg-green-500/20 text-green-400" : "bg-red-500/20 text-red-400"
-                )}>
-                    {container.State}
+                <div className="flex items-center gap-2">
+                    <span className="opacity-50">private</span>
                 </div>
             </div>
 
-            <div className="flex gap-2 mt-auto pt-4 border-t border-white/5">
+            {/* Content Area */}
+            <div className={cn(
+                "p-5 grow flex flex-col gap-1 transition-colors",
+                isActive ? "bg-blue-50/30" : "bg-gray-50/20"
+            )}>
+                <h3 className="font-black text-lg text-gray-900 leading-tight truncate">
+                    {name} 💻
+                </h3>
+                <p className="text-xs text-gray-400 font-medium truncate mb-4">{container.Image}</p>
+
+                {/* Actions Footer */}
+                <div className="flex items-center gap-2 mt-auto pt-4 border-t border-gray-100">
+                    <div className="flex items-center gap-2 text-[10px] font-bold text-gray-400">
+                        <div className="w-5 h-5 rounded-full bg-gray-200 border border-white overflow-hidden flex items-center justify-center text-[8px] text-gray-500">
+                            W
+                        </div>
+                        WerterKrot
+                    </div>
+                </div>
+            </div>
+
+            {/* Controls */}
+            <div className="px-4 py-3 bg-white border-t border-gray-100 flex gap-2">
                 <button
                     onClick={(e) => { e.stopPropagation(); onAction(container.Id, isActive ? 'stop' : 'start'); }}
-                    className="flex-1 p-2 rounded-lg bg-white/5 hover:bg-white/10 transition-colors flex items-center justify-center gap-2 text-sm"
+                    className={cn(
+                        "flex-1 flex items-center justify-center gap-2 py-2 rounded-lg text-xs font-bold transition-all",
+                        isActive
+                            ? "bg-red-50 text-red-600 hover:bg-red-100 border border-red-100"
+                            : "bg-green-50 text-green-600 hover:bg-green-100 border border-green-100"
+                    )}
                 >
-                    {isActive ? <Square size={14} className="text-red-400" /> : <Play size={14} className="text-green-400" />}
-                    <span>{isActive ? 'Stop' : 'Start'}</span>
+                    {isActive ? <Square size={12} /> : <Play size={12} />}
+                    {isActive ? 'Stop' : 'Start'}
                 </button>
                 <button
                     onClick={(e) => { e.stopPropagation(); onAction(container.Id, 'restart'); }}
-                    className="p-2 rounded-lg bg-white/5 hover:bg-white/10 transition-colors"
-                    title="Restart"
+                    className="p-2 rounded-lg bg-gray-50 text-gray-500 hover:bg-gray-100 border border-gray-200 transition-colors"
                 >
                     <RotateCcw size={14} />
-                </button>
-                <button
-                    onClick={(e) => { e.stopPropagation(); onViewLogs(container.Id); }}
-                    className="p-2 rounded-lg bg-white/5 hover:bg-white/10 transition-colors"
-                    title="View Logs"
-                >
-                    <Terminal size={14} />
                 </button>
             </div>
         </motion.div>

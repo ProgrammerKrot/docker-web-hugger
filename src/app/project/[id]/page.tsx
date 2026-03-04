@@ -56,67 +56,67 @@ export default function ProjectPage() {
     };
 
     return (
-        <div className="max-w-7xl mx-auto space-y-8 pb-24 px-4 sm:px-6 lg:px-8">
-            {/* Header */}
-            <header className="flex flex-col gap-6 pt-8">
+        <div className="space-y-8 animate-in fade-in duration-500 pb-20">
+            {/* Header / Breadcrumbs */}
+            <header className="flex flex-col gap-6">
                 <Link
                     href="/"
-                    className="flex items-center gap-2 text-white/40 hover:text-white transition-colors w-fit group"
+                    className="flex items-center gap-2 text-gray-400 hover:text-indigo-600 transition-colors w-fit group font-bold text-xs uppercase tracking-widest"
                 >
-                    <ArrowLeft size={16} className="group-hover:-translate-x-1 transition-transform" />
-                    <span className="text-sm font-medium">Back to Projects</span>
+                    <ArrowLeft size={14} className="group-hover:-translate-x-1 transition-transform" />
+                    <span>Back to Spaces</span>
                 </Link>
 
-                <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
-                    <div className="space-y-2">
-                        <div className="flex items-center gap-3">
-                            <div className="w-10 h-10 rounded-xl bg-blue-500/20 flex items-center justify-center border border-blue-500/30 text-blue-400">
-                                <Layers size={21} />
-                            </div>
-                            <div>
-                                <h1 className="text-3xl font-black text-white tracking-tight">
+                <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
+                    <div className="flex items-center gap-4">
+                        <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-indigo-500 to-purple-500 flex items-center justify-center border border-indigo-200 text-white shadow-sm">
+                            <Layers size={24} />
+                        </div>
+                        <div>
+                            <div className="flex items-center gap-2">
+                                <h1 className="text-2xl font-black text-gray-900 tracking-tight">
                                     {projectId === 'standalone' ? 'Standalone Spaces' : projectId}
                                 </h1>
-                                <p className="text-sm text-white/40 font-medium">
-                                    Project View • {containers.length} Containers
-                                </p>
                             </div>
+                            <p className="text-xs text-gray-400 font-bold uppercase tracking-widest mt-0.5">
+                                {containers.length} Running Containers
+                            </p>
                         </div>
                     </div>
 
                     <button
                         onClick={() => { setRefreshing(true); loadData(); }}
-                        className="glass px-4 py-2 rounded-xl flex items-center gap-2 hover:bg-white/5 transition-all outline-none"
+                        className="bg-white border border-gray-200 px-4 py-2 rounded-lg flex items-center gap-2 hover:bg-gray-50 transition-all shadow-sm group"
                     >
-                        <RefreshCw size={16} className={refreshing ? 'animate-spin text-blue-400' : 'text-white/40'} />
-                        <span className="text-sm font-bold text-white/70">Refresh Project</span>
+                        <RefreshCw size={14} strokeWidth={2.5} className={refreshing ? 'animate-spin text-indigo-500' : 'text-gray-400 group-hover:text-indigo-500'} />
+                        <span className="text-xs font-bold text-gray-600 group-hover:text-indigo-600">Sync Pipeline</span>
                     </button>
                 </div>
             </header>
 
             {/* Containers & Logs Section */}
-            <div className="space-y-12">
+            <div className="space-y-10">
                 {loading ? (
                     <div className="space-y-8">
                         {[1, 2].map(i => (
                             <div key={i} className="grid grid-cols-1 lg:grid-cols-12 gap-6 animate-pulse">
-                                <div className="lg:col-span-4 h-48 glass rounded-2xl"></div>
-                                <div className="lg:col-span-8 h-48 glass rounded-2xl"></div>
+                                <div className="lg:col-span-4 h-48 bg-gray-50 rounded-2xl border border-gray-100"></div>
+                                <div className="lg:col-span-8 h-48 bg-gray-50 rounded-2xl border border-gray-100"></div>
                             </div>
                         ))}
                     </div>
                 ) : (
                     <AnimatePresence mode="popLayout">
                         {containers.length === 0 ? (
-                            <div className="h-[400px] glass rounded-3xl flex flex-col items-center justify-center gap-4 text-white/20">
+                            <div className="h-[400px] border-2 border-dashed border-gray-100 rounded-3xl flex flex-col items-center justify-center gap-4 text-gray-300">
                                 <Box size={60} strokeWidth={1} />
-                                <p className="text-xl font-medium">No containers found in this project</p>
+                                <p className="text-lg font-medium italic">No active spaces in this pipeline</p>
                             </div>
                         ) : (
                             containers.map((container, idx) => (
                                 <motion.div
                                     key={container.Id}
-                                    initial={{ opacity: 0, y: 20 }}
+                                    initial={{ opacity: 0, y: 15 }}
                                     animate={{ opacity: 1, y: 0 }}
                                     transition={{ delay: idx * 0.1 }}
                                     className="grid grid-cols-1 lg:grid-cols-12 gap-6 group"
@@ -126,7 +126,7 @@ export default function ProjectPage() {
                                         <SpaceCard
                                             container={container}
                                             onAction={handleAction}
-                                            onViewLogs={() => { }} // Disabled here since logs are always visible
+                                            onViewLogs={() => { }}
                                             isSelected={false}
                                         />
                                     </div>
@@ -144,8 +144,6 @@ export default function ProjectPage() {
                     </AnimatePresence>
                 )}
             </div>
-
-            {/* Images View Section Link or Preview could go here */}
         </div>
     );
 }

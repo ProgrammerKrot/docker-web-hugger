@@ -44,59 +44,47 @@ export default function Dashboard() {
     }, []);
 
     return (
-        <div className="max-w-7xl mx-auto space-y-12 pb-24 px-4 sm:px-6 lg:px-8">
-            {/* Header */}
-            <header className="flex flex-col md:flex-row md:items-end justify-between gap-6 pt-12">
-                <div>
-                    <motion.div
-                        initial={{ opacity: 0, x: -20 }}
-                        animate={{ opacity: 1, x: 0 }}
-                        className="flex items-center gap-2 mb-2"
-                    >
-                        <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center shadow-[0_0_15px_rgba(37,99,235,0.4)] text-white">
-                            <Activity size={18} className={refreshing ? 'animate-spin' : ''} />
-                        </div>
-                        <span className="text-xs font-bold text-blue-500 uppercase tracking-widest">Antigravity Labs</span>
-                    </motion.div>
-                    <motion.h1
-                        initial={{ opacity: 0, y: 10 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        className="text-4xl md:text-5xl font-black tracking-tight text-white"
-                    >
-                        Docker <span className="bg-gradient-to-r from-blue-400 to-indigo-500 bg-clip-text text-transparent">Spaces</span>
-                    </motion.h1>
-                    <p className="mt-2 text-white/40 font-medium">Manage your Docker orchestration with style.</p>
-                </div>
-
-                <div className="flex gap-4">
-                    <div className="flex glass px-4 py-2 rounded-full text-xs font-medium gap-6">
+        <div className="space-y-10 animate-in fade-in duration-500">
+            {/* Header / Search Area */}
+            <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
+                <div className="flex items-center gap-3">
+                    <div className="p-2.5 bg-indigo-50 text-indigo-600 rounded-xl">
+                        <Layers size={24} strokeWidth={2.5} />
+                    </div>
+                    <div>
                         <div className="flex items-center gap-2">
-                            <span className="w-2 h-2 rounded-full bg-green-500"></span>
-                            <span className="text-white/70">{containers.filter(c => c && c.State === 'running').length} Active</span>
-                        </div>
-                        <div className="flex items-center gap-2 border-l border-white/10 pl-6">
-                            <span className="w-2 h-2 rounded-full bg-white/20"></span>
-                            <span className="text-white/70">{containers.length} Total</span>
+                            <h2 className="text-xl font-black text-gray-900">Spaces</h2>
+                            <span className="bg-gray-100 text-gray-500 px-2 py-0.5 rounded text-xs font-bold">
+                                {Object.keys(projects).length}
+                            </span>
                         </div>
                     </div>
                 </div>
-            </header>
+
+                <div className="flex items-center gap-3">
+                    <div className="relative group">
+                        <div className="absolute inset-y-0 left-3 flex items-center pointer-events-none text-gray-400 group-focus-within:text-indigo-500 transition-colors">
+                            <Box size={16} />
+                        </div>
+                        <input
+                            type="text"
+                            placeholder="Search spaces..."
+                            className="bg-gray-100/50 border border-gray-200 rounded-lg pl-10 pr-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all w-full md:w-64"
+                        />
+                    </div>
+                </div>
+            </div>
 
             {/* Hub View - Projects and Standalone */}
-            <section className="space-y-8">
-                <div className="flex items-center gap-2 pb-2 border-b border-white/5">
-                    <LayoutGrid size={20} className="text-foreground/40" />
-                    <h2 className="text-xl font-bold uppercase tracking-tight text-white/70">Project Hub</h2>
-                </div>
-
+            <section className="space-y-6">
                 {loading ? (
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-6">
                         {[1, 2, 3].map(i => (
-                            <div key={i} className="glass rounded-2xl h-40 animate-pulse" />
+                            <div key={i} className="hf-card h-40 animate-pulse bg-gray-50" />
                         ))}
                     </div>
                 ) : (
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-6">
                         <AnimatePresence mode="popLayout">
                             {Object.values(projects).map((project: any) => (
                                 <ProjectCard
