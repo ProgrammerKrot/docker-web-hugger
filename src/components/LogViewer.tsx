@@ -30,7 +30,7 @@ export default function LogViewer({ selectedContainerId, containers }: LogViewer
 
         const connect = () => {
             console.log(`Connecting to logs for ${selectedContainerId}... (Attempt ${retryCount + 1})`);
-            eventSource = new EventSource(`http://localhost:8000/logs/stream?containerId=${selectedContainerId}`);
+            eventSource = new EventSource(`http://${window.location.hostname}:8000/logs/stream?containerId=${selectedContainerId}`);
 
             eventSource.onmessage = (event) => {
                 const logContent = event.data;
